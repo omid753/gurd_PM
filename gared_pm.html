@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GUARD PM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050505;
+      --bg-card: #0d0d0d;
+      --red: #ff1a1a;
+      --red-glow: #ff0033;
+      --blue: #00aaff;
+      --blue-glow: #0088ff;
+      --text: #b11d1d;
+      --text-dim: #aa2222;
+      --border: #331111;
+      --green-status: #00ff66;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Vazirmatn', 'Orbitron', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* پس‌زمینه شبکه‌ای مثل سایت اصلی */
+    
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='10' y='25' font-family='Arial,sans-serif' font-size='11' fill='%23ffffff' opacity='0.18' transform='rotate(-45 20 20)'%3EPM%3C/text%3E%3Ctext x='50' y='65' font-family='Arial,sans-serif' font-size='11' fill='%2300aaff' opacity='0.18' transform='rotate(-45 60 60)'%3EPM%3C/text%3E%3C/svg%3E");
+  background-size: 90px 90px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px 16px 80px;
+    }
+
+    /* ========== هدر سایت (اسم سایت) ========== */
+    /* برای تغییر رنگ و متن اسم سایت اینجا رو ویرایش کن */
+    header {
+      text-align: center;
+      padding: 30px 0 20px;
+      position: sticky;
+      top: 0;
+      background: linear-gradient(to bottom, rgba(5,5,5,0.95), rgba(5,5,5,0.8));
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.8rem, 6vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .logo .guard {
+      color: var(--red);
+      text-shadow: 
+        0 0 10px var(--red-glow),
+        0 0 20px var(--red-glow),
+        0 0 40px rgba(255, 0, 50, 0.5);
+    }
+
+    .logo .pm {
+      font-family: 'Algerian';
+      color: var(--blue);
+      text-shadow: 
+        0 0 10px var(--blue-glow),
+        0 0 20px var(--blue-glow),
+        0 0 40px rgba(0, 136, 255, 0.5);
+    }
+
+    /* ========== بخش هیرو (بالای صفحه) ========== */
+    .hero {
+      text-align: center;
+      padding: 40px 0 50px;
+    }
+
+    .system-status {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+    }
+
+    /* عنوان با انیمیشن تایپ کردن */
+    /* برای تغییر متن تایپ‌شونده، مقدار data-text رو عوض کن */
+    .typing-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2.2rem, 8vw, 3.8rem);
+      font-weight: 900;
+      color: var(--red);
+      text-shadow: 
+        0 0 15px var(--red-glow),
+        0 0 30px var(--red-glow),
+        0 0 60px rgba(255, 0, 50, 0.4);
+      min-height: 1.2em;
+      margin-bottom: 16px;
+    }
+
+    .typing-title::after {
+      content: '|';
+      animation: blink 0.8s infinite;
+      color: var(--blue);
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* توضیح اصلی زیر عنوان */
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--text-dim);
+      max-width: 480px;
+      margin: 0 auto 24px;
+      line-height: 1.8;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+      font-size: 0.85rem;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 8px var(--red-glow);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* دکمه‌های گروه و کانال */
+    /* لینک‌های واقعی گروه و کانال رو در href عوض کن */
+    .btn-row {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 28px;
+      border: 1px solid var(--red);
+      background: transparent;
+      color: var(--red);
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: "pm Gap";
+      border-radius: 4px;
+      transition: all 0.25s ease;
+      min-width: 220px;
+      text-align: center;
+      box-shadow: 0 0 12px rgba(255, 26, 26, 0.2);
+    }
+
+    .btn:hover {
+      background: rgba(255, 26, 26, 0.15);
+      box-shadow: 0 0 20px rgba(255, 26, 26, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .btn.primary {
+      background: rgba(255, 26, 26, 0.12);
+      border-width: 2px;
+    }
+
+    /* ========== بخش‌های صفحه ========== */
+    section {
+      margin-bottom: 50px;
+    }
+
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 3px;
+      color: var(--text-dim);
+      text-align: center;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .section-title span {
+      color: var(--red);
+      text-shadow: 0 0 10px var(--red-glow);
+    }
+
+    /* کارت‌ها */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--red);
+      box-shadow: 0 0 18px rgba(255, 26, 26, 0.15);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 6px;
+    }
+
+    .card-role {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 1.5px;
+      color: var(--blue);
+      text-shadow: 0 0 8px var(--blue-glow);
+    }
+
+    .card-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 0 12px rgba(255, 26, 26, 0.4);
+      margin-bottom: 4px;
+    }
+
+    .card-handle {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      direction: ltr;
+      text-align: right;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-top: 8px;
+    }
+
+    /* تب‌های اعضای تیم */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-dim);
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      border-color: var(--red);
+      color: var(--red);
+      box-shadow: 0 0 12px rgba(255, 26, 26, 0.3);
+      background: rgba(255, 26, 26, 0.08);
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 500px) {
+      .team-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .member-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .member-card:hover {
+      border-color: var(--red);
+      box-shadow: 0 0 15px rgba(255, 26, 26, 0.2);
+    }
+
+    .member-id {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .member-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(255, 26, 26, 0.35);
+      margin-bottom: 4px;
+    }
+
+    .member-role {
+      font-size: 0.75rem;
+      color: var(--red);
+      text-shadow: 0 0 8px var(--red-glow);
+    }
+
+    /* باکس پشتیبانی */
+    .support-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 22px;
+      text-align: center;
+    }
+
+    .support-title {
+      font-size: 0.9rem;
+      margin-bottom: 14px;
+      color: var(--text-dim);
+    }
+
+    .support-handle {
+      display: inline-block;
+      padding: 10px 24px;
+      border: 1px solid var(--red);
+      border-radius: 4px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      color: var(--red);
+      text-shadow: 0 0 10px var(--red-glow);
+      margin-bottom: 12px;
+      direction: ltr;
+    }
+
+    .support-note {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    /* فوتر */
+    footer {
+      text-align: center;
+      padding: 40px 0 20px;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+
+    .footer-logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 18px 0;
+    }
+
+    .footer-links a {
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .footer-links a:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .footer-info {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 16px;
+      line-height: 1.7;
+    }
+
+    .footer-info a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    .ltr { direction: ltr; unicode-bidi: embed; }
+    .hidden { display: none !important; }
+
+    .member-card.empty {
+      opacity: 0.35;
+      border-style: dashed;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <!-- ========== اسم سایت (هدر) ========== -->
+    
+    <div class="logo">
+      <span class="guard">GUARD</span> <span class="pm">PM</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- ========== بخش اصلی بالای صفحه (هیرو) ========== -->
+    <section class="hero">
+      <div class="system-status">SYSTEM INITIALIZED — GUARD PM ONLINE</div>
+
+      <!-- عنوان با انیمیشن تایپ کردن -->
+      <!-- برای تغییر متنی که تایپ می‌شه، مقدار data-text رو عوض کن -->
+      <h1 class="typing-title" id="typingTitle" data-text="GUARD PM"></h1>
+
+      <!-- توضیح اصلی زیر عنوان -->
+      <!-- این متن رو به دلخواه خودت تغییر بده -->
+      <p class="hero-desc">
+        welcom to Guard PM with owner Alireza PM
+      </p>
+
+      <div class="status-row">
+        <div class="status-item"><span class="dot"></span> آنلاین</div>
+        <div class="status-item"><span class="dot"></span> تیم فعال</div>
+        <div class="status-item"><span class="dot"></span> آماده عملیات</div>
+      </div>
+
+      <!-- ========== لینک گروه و کانال ========== -->
+      <!-- لینک واقعی گروه و کانال رو در href="" قرار بده -->
+      <div class="btn-row">
+        <a href="https://t.me/Guard_PM" class="btn" target="_blank" rel="noopener">
+         GAP PM
+        </a>
+        <a href="https://t.me/Surprise_PM" class="btn" target="_blank" rel="noopener">
+         CHANNEL <span >PM</span>
+        </a>
+        <a href="http://instagram.com/RealAlirezaPM" class="btn primary">Alireza PM Instagram page</a>
+      </div>
+    </section>
+
+    <!-- ========== بخش مالکان (Owners) ========== -->
+    <!-- اسم، آیدی و توضیح مالکان رو اینجا تغییر بده -->
+    <section id="owners">
+      <div class="section-title"> مالک  <span>managers</span> </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-role">managers</span>
+        </div>
+                 <a href="https://t.me/RealAlirezaPM" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">Alireza PM</a>
+
+        <div class="card-desc"> سازنده    </div>
+      </div>
+
+      
+    </section>
+
+    <!-- ========== بخش لیدرها (Leaders) ========== -->
+    <!-- اسم و توضیح لیدرها رو اینجا تغییر بده -->
+    <section id="leaders">
+      <div class="section-title">لیدرها </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-role">لیدر</span>
+        </div>
+                  <a href="https://t.me/RealAlirezaPM" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">Alireza PM</a>
+
+        <div class="card-handle ltr"></div>
+        <div class="card-desc"></div>
+      </div>
+
+      
+    </section>
+
+    <!-- ========== بخش رهبر اصلی اکپ ========== -->
+    <!-- اسم و توضیح رهبر اصلی تیم رو اینجا تغییر بده -->
+    <section>
+      <div class="section-title">رهبر گارد — <span>GUARD LEADER</span> //</div>
+      <div class="card" style="text-align: center; border-color: var(--red); box-shadow: 0 0 25px rgba(255,26,26,0.2);">
+        <div style="width: 70px; height: 70px; margin: 0 auto 14px; border: 2px solid var(--red); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: Algerian; font-size: 1.6rem; font-weight: 800; color: var(--red); text-shadow: 0 0 15px var(--red-glow);">
+          PM
+        </div>
+        <a href="https://t.me/RealAlirezaPM" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">Alireza PM</a>
+        <div class="card-handle ltr"></div>
+        <div class="card-desc" style="max-width: 340px; margin: 10px auto 0;">
+        </div>
+         رهبر گارد 
+      </div>
+    </section>
+
+    <!-- ========== بخش اعضای تیم ========== -->
+    <section id="team">
+      <div class="section-title">اعضای تیم — <span>TEAM MEMBERS</span> //</div>
+      <div class="section-title" style="font-size: 0.75rem; margin-top: -10px;">GUARD PM_ACTIVE SQUAD</div>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="core">  اعضای گارد </button>
+        
+        
+
+       
+      </div>
+     
+
+      <!-- اعضای هسته اصلی - اسم و رول اعضا رو اینجا تغییر بده -->
+      <div class="tab active" href="https://t.me/RealAlirezaPM">
+          <div class="member-id">PM</div>
+          <a href="https://t.me/RealAlirezaPM" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">Alireza PM</a>
+          <div class="member-role">GUARD LEADER PM</div>
+     
+        
+      
+      </div>
+      <div class="tab active">
+          <div class="member-id">PM</div>
+          <a href="https://t.me/omid_dbqp" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">omid PM</a>
+          <div class="member-role">CORE MEMBER PM</div>
+     
+        
+      
+      </div>
+      <div class="tab active">
+          <div class="member-id">PM</div>
+          <a href="https://t.me/DORSAxPM" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">Dorsa PM</a>
+          <div class="member-role">CORE MEMBER PM</div>
+     
+        
+      
+      </div>
+      <div class="tab active">
+          <div class="member-id">PM</div>
+          <a href="https://t.me/TauLh" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">ARSI PM</a>
+          <div class="member-role">CORE MEMBER PM</div>
+     
+        
+      
+      </div>
+
+
+
+
+      <div class="tab active">
+          <div class="member-id">PM</div>
+          <a href="https://t.me/Bit_Butterfly" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">Bita PM</a>
+          <div class="member-role">CORE MEMBER PM</div>
+
+          </div>
+     
+        
+     
+      <div class="tab active">
+          <div class="member-id">PM</div>
+          <a href="https://t.me/ldDamon" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">Mekanik  PM</a>
+          <div class="member-role">CORE MEMBER PM</div>
+          </div>
+     
+        
+      
+    
+      <div class="tab active">
+          <div class="member-id">PM</div>
+          <a href="https://t.me/Isadora_Pm" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">Delaram  PM</a>
+          <div class="member-role">CORE MEMBER PM</div>
+     
+        </div>
+        
+      
+      
+      <div class="tab active">
+          <div class="member-id">PM</div>
+          <a href="https://t.me/Amirliaam" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">Bakhtak PM</a>
+          <div class="member-role">CORE MEMBER PM</div>
+      </div>
+      <div class="tab active">
+          <div class="member-id">PM</div>
+          <a href="https://t.me/Mmdtaraz" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">Mmd PM</a>
+          <div class="member-role">CORE MEMBER PM</div>
+      </div>
+       <div class="tab active">
+          <div class="member-id">PM</div>
+          <a href="https://t.me/Mwdpuv" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">Mwd PM</a>
+          <div class="member-role">CORE MEMBER PM</div>
+      </div>
+         <div class="tab active">
+          <div class="member-id">PM</div>
+          <a href="https://t.me/surgeon_85" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">HajReza PM</a>
+          <div class="member-role">CORE MEMBER PM</div>
+      </div>
+      <div class="tab active">
+          <div class="member-id">PM</div>
+          <a href="https://t.me/H_SHARK" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">Hamed PM</a>                                                                   PM</a>
+          <div class="member-role">CORE MEMBER PM</div>
+      </div>
+      <div class="tab active">
+          <div class="member-id">PM</div>
+          <a href="https://t.me/kir_to_Lovee" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">Tural PM</a>                                                                   PM</a>
+          <div class="member-role">CORE MEMBER PM</div>
+      </div>
+      <div class="tab active">
+          <div class="member-id">PM</div>
+          <a href="https://t.me/D_13858" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">Diana PM</a>                                                                   PM</a>
+          <div class="member-role">CORE MEMBER PM</div>
+      </div>
+       <div class="tab active">
+          <div class="member-id">PM</div>
+          <a href="https://t.me/g0ond" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">Taha PM</a>                                                                   PM</a>
+          <div class="member-role">CORE MEMBER PM</div>
+      </div>
+      <div class="tab active">
+          <div class="member-id">PM</div>
+          <a href="https://t.me/Titon0p" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">Arvin PM</a>                                                                   PM</a>
+          <div class="member-role">CORE MEMBER PM</div>
+      </div>
+        
+      
+      </div>
+
+
+    </section>
+
+    <!-- ========== بخش پشتیبانی ========== -->
+    
+    <section id="support">
+      <div class="section-title">پشتیبانی <span></span> </div>
+      <div class="support-box"> 
+                  <a href="https://t.me/omid_dbqp" target="_blank" class="card-name" style="text-decoration: none; color: inherit,">omid PM</a>
+
+       
+        <p class="support-note">
+         در صورت حرابی بهم نگو لطفا
+        </p>
+      </div>
+    </section>
+
+    <!-- ========== فوتر (پایین صفحه) ========== -->
+    <footer>
+      <div class="footer-logo">
+        <span class="guard" style="color: var(--red); text-shadow: 0 0 10px var(--red-glow);">GUARD</span>
+        <span class="pm" style="color: var(--blue); text-shadow: 0 0 10px var(--blue-glow);"> PM</span>
+      </div>
+
+      <div style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 8px;">
+      Enduiring wind PM
+      </div>
+
+      <div class="footer-links">
+        <!-- لینک‌های فوتر رو هم اینجا می‌تونی تغییر بدی -->
+        <a href="https://t.me/Guard_PM" target="_blank">گروه</a>
+        <a href="https://t.me/Surprise_PM" target="_blank">چنل</a>
+        <a href="#owners">مالکان</a>
+        <a href="#leaders">لیدرها</a>
+        <a href="#team">اعضای تیم</a>
+        <a href="#support">پشتیبانی</a>
+      </div>
+
+      <div class="footer-info">
+        <!-- آیدی تلگرام و متن کپی‌رایت رو اینجا تغییر بده -->
+        تلگرام: <a href="https://t.me/TheLegendaryWilson" target="_blank">@omid_dbqp</a><br>
+         Guard PM Team <br>
+          <span style="color: var(--red);"></span>  <br>
+        <span style="font-family: Orbitron; font-size: 0.7rem; letter-spacing: 1px;"></span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // ========== انیمیشن تایپ کردن ==========
+    // متن از ویژگی data-text روی عنصر #typingTitle خونده می‌شه
+    const titleEl = document.getElementById('typingTitle');
+    const fullText = titleEl.getAttribute('data-text') || 'GUARD PM';
+    let i = 0;
+
+    function typeWriter() {
+      if (i < fullText.length) {
+        titleEl.textContent = fullText.substring(0, i + 1);
+        i++;
+        setTimeout(typeWriter, 120);
+      } else {
+        // بعد از چند ثانیه دوباره از اول تایپ می‌کنه
+        setTimeout(() => {
+          i = 0;
+          titleEl.textContent = '';
+          setTimeout(typeWriter, 400);
+        }, 3500);
+      }
+    }
+    typeWriter();
+
+    // ========== تب‌های اعضای تیم ==========
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelectorAll('[id^="tab-"]').forEach(panel => panel.classList.add('hidden'));
+        document.getElementById('tab-' + tab.dataset.tab).classList.remove('hidden');
+      });
+    });
+  </script>
+</body>
+</html>
